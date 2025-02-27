@@ -1,13 +1,17 @@
 import { ProfileUI } from '@ui-pages';
 import { FC, SyntheticEvent, useEffect, useState } from 'react';
+import { RootState, useSelector, useDispatch } from '../../services/store';
+import { Preloader } from '@ui';
+import { updateUserThunk } from '../../services/thunks/user-thunks';
 
 export const Profile: FC = () => {
-  /** TODO: взять переменную из стора */
-  const user = {
-    name: '',
-    email: ''
-  };
+  const user = useSelector((store: RootState) => store.user.data.user);
+  const userIsLoading = useSelector((store: RootState) => store.user.isLoading);
+  const dispatch = useDispatch();
 
+  if (!user || userIsLoading) {
+    return <Preloader />;
+  }
   const [formValue, setFormValue] = useState({
     name: user.name,
     email: user.email,
@@ -27,8 +31,21 @@ export const Profile: FC = () => {
     formValue.email !== user?.email ||
     !!formValue.password;
 
-  const handleSubmit = (e: SyntheticEvent) => {
+  const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
+    if (!isFormChanged) return;
+    const userData = {
+      name: formValue.name,
+      email: formValue.email,
+      password: formValue.password
+    };
+    try {
+      await dispatch(updateUserThunk(userData)).unwrap();
+      alert('Данные успешно обновлены');
+    } catch (error) {
+      console.error('Ошибка при обновлении данных:', error);
+      alert('Не удалось обновить данные');
+    }
   };
 
   const handleCancel = (e: SyntheticEvent) => {
@@ -41,10 +58,10 @@ export const Profile: FC = () => {
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormValue((prevState) => ({
-      ...prevState,
+    setFormValue({
+      ...formValue,
       [e.target.name]: e.target.value
-    }));
+    });
   };
 
   return (
@@ -56,6 +73,4 @@ export const Profile: FC = () => {
       handleInputChange={handleInputChange}
     />
   );
-
-  return null;
 };

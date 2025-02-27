@@ -1,5 +1,5 @@
 import { FC } from 'react';
-
+import { Outlet } from 'react-router-dom';
 import { Button, Input } from '@zlden/react-developer-burger-ui-components';
 import styles from './profile.module.css';
 import commonStyles from '../common.module.css';
@@ -19,6 +19,7 @@ export const ProfileUI: FC<ProfileUIProps> = ({
     <div className={`mt-30 mr-15 ${styles.menu}`}>
       <ProfileMenu />
     </div>
+    <Outlet />
     <form
       className={`mt-30 ${styles.form} ${commonStyles.form}`}
       onSubmit={handleSubmit}
