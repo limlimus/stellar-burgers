@@ -2,33 +2,26 @@ import { FC, useMemo, useEffect } from 'react';
 import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient } from '@utils-types';
-import { RootState, useSelector, useDispatch } from '../../services/store';
+import { useSelector, useDispatch } from '../../services/store';
 import { useParams, useLocation } from 'react-router-dom';
 import {
   getOrderByNumberThunk,
   getFeedsThunk
 } from '../../services/slices/order-slice';
-import { getIngredientsThunk } from '../../services/slices/ingredients-slice';
 
 export const OrderInfo: FC = () => {
   const location = useLocation();
   const dispatch = useDispatch();
 
-  const orders = useSelector((state: RootState) => state.orders.orders);
+  const orders = useSelector((state) => state.orders.orders);
   useEffect(() => {
     if (!orders.length) {
       dispatch(getFeedsThunk());
     }
   }, [dispatch, orders.length]);
   const ingredients: TIngredient[] | [] = useSelector(
-    (store: RootState) => store.ingredients.ingredients
+    (store) => store.ingredients.ingredients
   );
-
-  useEffect(() => {
-    if (ingredients.length === 0) {
-      dispatch(getIngredientsThunk());
-    }
-  }, [dispatch]);
 
   const { number } = useParams<{ number: string }>();
   const orderData = useMemo(

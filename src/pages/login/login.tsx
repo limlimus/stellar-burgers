@@ -1,7 +1,7 @@
 import { FC, SyntheticEvent, useState, useEffect } from 'react';
 import { LoginUI } from '@ui-pages';
-import { useNavigate } from 'react-router-dom';
-import { useDispatch, RootState, useSelector } from '../../services/store';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useDispatch, useSelector } from '../../services/store';
 import { loginUserThunk } from '../../services/thunks/user-thunks';
 import { Preloader } from '@ui';
 
@@ -11,11 +11,10 @@ export const Login: FC = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const isAuthenticated = useSelector(
-    (state: RootState) => state.user.isAuthenticated
-  );
-  const isLoading = useSelector((state: RootState) => state.user.isLoading);
-  const error = useSelector((state: RootState) => state.user.error);
+  const location = useLocation();
+  const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+  const isLoading = useSelector((state) => state.user.isLoading);
+  const error = useSelector((state) => state.user.error);
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
@@ -24,9 +23,10 @@ export const Login: FC = () => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate('/');
+      const returnPath = location.state?.from?.pathname || '/';
+      navigate(returnPath, { replace: true });
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, navigate, location]);
 
   return isLoading ? (
     <Preloader />

@@ -16,14 +16,15 @@ import {
   Route,
   useLocation,
   useNavigate,
-  useParams,
   useMatch
 } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import store from '../../services/store';
+import store, { useDispatch, useSelector } from '../../services/store';
 import '../../index.css';
 import styles from './app.module.css';
-
+import { useEffect } from 'react';
+import { getIngredientsThunk } from '../../services/slices/ingredients-slice';
+import { getUserThunk } from '../../services/thunks/user-thunks';
 import {
   AppHeader,
   Modal,
@@ -43,10 +44,17 @@ const App = () => (
 const AppContent = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const profileMatch = useMatch('/profile/orders/:number')?.params.number;
   const feedMatch = useMatch('/feed/:number')?.params.number;
   const orderNumber = profileMatch || feedMatch;
-
+  const isInit = useSelector((store) => store.user.isInit);
+  useEffect(() => {
+    dispatch(getIngredientsThunk());
+  }, [dispatch]);
+  useEffect(() => {
+    dispatch(getUserThunk());
+  }, [dispatch, isInit]);
   const background = location.state?.background;
   return (
     <div className={styles.app}>

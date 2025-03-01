@@ -1,12 +1,11 @@
 import { ProfileUI } from '@ui-pages';
 import { FC, SyntheticEvent, useEffect, useState } from 'react';
-import { RootState, useSelector, useDispatch } from '../../services/store';
+import { useSelector, useDispatch } from '../../services/store';
 import { Preloader } from '@ui';
 import { updateUserThunk } from '../../services/thunks/user-thunks';
-
 export const Profile: FC = () => {
-  const user = useSelector((store: RootState) => store.user.data.user);
-  const userIsLoading = useSelector((store: RootState) => store.user.isLoading);
+  const user = useSelector((store) => store.user.data.user);
+  const userIsLoading = useSelector((store) => store.user.isLoading);
   const dispatch = useDispatch();
 
   if (!user || userIsLoading) {

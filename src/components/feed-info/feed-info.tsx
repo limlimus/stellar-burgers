@@ -1,7 +1,7 @@
 import { FC, useEffect } from 'react';
 import { TOrder } from '@utils-types';
 import { FeedInfoUI } from '../ui/feed-info';
-import { useDispatch, useSelector, RootState } from '../../services/store';
+import { useDispatch, useSelector } from '../../services/store';
 import { getFeedsThunk } from '../../services/slices/order-slice';
 import { Preloader } from '@ui';
 
@@ -21,7 +21,7 @@ export const FeedInfo: FC = () => {
     fetchData();
   }, []);
 
-  const feed = useSelector((store: RootState) => store.orders);
+  const feed = useSelector((store) => store.orders);
 
   if (!feed) {
     return <Preloader />;

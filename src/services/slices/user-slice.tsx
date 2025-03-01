@@ -153,6 +153,7 @@ export const userSlice = createSlice({
         state.isLoading = false;
         state.isAuthenticated = false;
         state.error = null;
+        localStorage.removeItem('refreshToken');
       });
   }
 });

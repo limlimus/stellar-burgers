@@ -1,7 +1,7 @@
 import { FC, useMemo, useState } from 'react';
 import { TConstructorIngredient, TOrder } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
-import { useDispatch, useSelector, RootState } from '../../services/store';
+import { useDispatch, useSelector } from '../../services/store';
 import { orderBurgerThunk } from '../../services/slices/consructor-slice';
 import { useNavigate } from 'react-router-dom';
 
@@ -10,11 +10,11 @@ export const BurgerConstructor: FC = () => {
   const navigate = useNavigate();
 
   const constructorItems = useSelector(
-    (store: RootState) => store.constructorItems.constructorItems
+    (store) => store.constructorItems.constructorItems
   );
-  const isAuth = useSelector((store: RootState) => store.user.isAuthenticated);
+  const isAuth = useSelector((store) => store.user.isAuthenticated);
   const orderRequest = useSelector(
-    (store: RootState) => store.constructorItems.orderRequest
+    (store) => store.constructorItems.orderRequest
   );
   const [orderModalData, setOrderModalData] = useState<TOrder | null>(null);
 
@@ -30,9 +30,12 @@ export const BurgerConstructor: FC = () => {
     ];
 
     if (!constructorItems.bun || orderRequest) return;
-
-    const response = (await dispatch(orderBurgerThunk(ingredientIds))) as any;
-    setOrderModalData(response.payload.order);
+    if (!isAuth) {
+      navigate('/login'); // Перенаправляем на страницу логина
+    } else {
+      const response = (await dispatch(orderBurgerThunk(ingredientIds))) as any;
+      setOrderModalData(response.payload.order);
+    }
   };
 
   const closeOrderModal = () => {

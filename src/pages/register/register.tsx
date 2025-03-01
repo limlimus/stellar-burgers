@@ -1,7 +1,7 @@
 import { FC, SyntheticEvent, useState } from 'react';
 import { RegisterUI } from '@ui-pages';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch, RootState, useSelector } from '../../services/store';
+import { useDispatch, useSelector } from '../../services/store';
 import { getRegisterUser } from '../../services/thunks/user-thunks';
 import { Preloader } from '../../components/ui';
 
@@ -12,7 +12,7 @@ export const Register: FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { isLoading, error } = useSelector((state: RootState) => state.user);
+  const { isLoading, error } = useSelector((state) => state.user);
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
