@@ -33,7 +33,7 @@ export const LoginUI: FC<LoginUIProps> = ({
               value={email}
               name='email'
               error={false}
-              errorText=''
+              errorText={errorText}
               size='default'
             />
           </div>
@@ -42,6 +42,7 @@ export const LoginUI: FC<LoginUIProps> = ({
               onChange={(e) => setPassword(e.target.value)}
               value={password}
               name='password'
+              errorText={errorText}
             />
           </div>
           <div className={`pb-6 ${styles.button}`}>
