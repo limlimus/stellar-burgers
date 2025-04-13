@@ -4,7 +4,7 @@ import {
   removeIngredient,
   MoveUpIngredient,
   MoveDownIngredient
-} from './consructor-slice';
+} from './constructor-slice';
 import { bun, ing1, ing2 } from '../../__mocks__/ingredients';
 
 describe('тест редьюсера слайса constructor', () => {

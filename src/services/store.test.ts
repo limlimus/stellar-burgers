@@ -1,6 +1,6 @@
 /// <reference types="jest" />
 import { rootReducer } from '../services/store';
-import { constructorSlice } from '../services/slices/consructor-slice';
+import { constructorSlice } from './slices/constructor-slice';
 import { ingredientsSlice } from '../services/slices/ingredients-slice';
 import { userSlice } from '../services/slices/user-slice';
 import { ordersSlice } from '../services/slices/order-slice';

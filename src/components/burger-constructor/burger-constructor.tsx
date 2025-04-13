@@ -2,7 +2,7 @@ import { FC, useMemo, useState } from 'react';
 import { TConstructorIngredient, TOrder, TIngredient } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
 import { useDispatch, useSelector } from '../../services/store';
-import { orderBurgerThunk } from '../../services/slices/consructor-slice';
+import { orderBurgerThunk } from '../../services/slices/constructor-slice';
 import { useNavigate } from 'react-router-dom';
 
 export const BurgerConstructor: FC = () => {
