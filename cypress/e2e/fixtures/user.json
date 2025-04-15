@@ -1,0 +1,11 @@
+{
+  "statusCode": 200,
+  "body": {
+    "user": {
+      "email": "test@example.com",
+      "name": "Test User",
+      "userOrders": []
+    },
+    "isAuthenticated": true
+  }
+}

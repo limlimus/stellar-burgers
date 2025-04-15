@@ -1,8 +1,8 @@
 import { FC, useMemo, useState } from 'react';
-import { TConstructorIngredient, TOrder } from '@utils-types';
+import { TConstructorIngredient, TOrder, TIngredient } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
 import { useDispatch, useSelector } from '../../services/store';
-import { orderBurgerThunk } from '../../services/slices/consructor-slice';
+import { orderBurgerThunk } from '../../services/slices/constructor-slice';
 import { useNavigate } from 'react-router-dom';
 
 export const BurgerConstructor: FC = () => {
@@ -25,7 +25,7 @@ export const BurgerConstructor: FC = () => {
     }
     const ingredientIds = [
       bun._id,
-      ...ingredients.map((item) => item._id),
+      ...ingredients.map((item: TIngredient) => item._id),
       bun._id
     ];
 
