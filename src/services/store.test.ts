@@ -9,10 +9,10 @@ describe('rootReducer', () => {
     test('должен вернуть начальное состояние', () => {
       const actualState = rootReducer(undefined, { type: 'UNKNOWN_ACTION' });
       const expectedState = {
-        user: userSlice.reducer,
-        ingredients: ingredientsSlice.reducer,
-        constructorItems: constructorSlice.reducer,
-        orders: ordersSlice.reducer
+        user: userSlice.reducer(undefined, { type: 'UNKNOWN_ACTION' }),
+        ingredients: ingredientsSlice.reducer(undefined, { type: 'UNKNOWN_ACTION' }),
+        constructorItems: constructorSlice.reducer(undefined, { type: 'UNKNOWN_ACTION' }),
+        orders: ordersSlice.reducer(undefined, { type: 'UNKNOWN_ACTION' })
       };
       expect(actualState).toEqual(expectedState);
     });

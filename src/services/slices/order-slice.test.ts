@@ -1,3 +1,4 @@
+/// <reference types="jest" />
 import { ordersSlice, getFeedsThunk, getOrderByNumberThunk } from './order-slice';
 import { mockOrder, mockPayload } from '../../__mocks__/order'
 

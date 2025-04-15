@@ -2,6 +2,21 @@ import ingredients from '../e2e/fixtures/ingredients.json';
 import user from '../e2e/fixtures/user.json';
 import orderBurger from '../e2e/fixtures/order-burger.json';
 
+const testUrl = 'http://localhost:4000';
+
+const SELECTORS = {
+  ingredientLink: (id: string) =>
+    `[data-cy=cy-ingredient] a[href="/ingredients/${id}"]`,
+  constructorTop: '[data-cy=constructor-top]',
+  constructorBottom: '[data-cy=constructor-bottom]',
+  constructorMain: '[data-cy=constructor-main]',
+  createOrderButton: '[data-cy=cy-create-order] button',
+  modal: '[data-cy=cy-modal]',
+  modalClose: '[data-cy=modal-close]',
+  modalOverlay: '[data-cy=modal-overlay]',
+  noIngredients: '[data-cy=no-ingredients]'
+};
+
 const bun = ingredients.find((item) => item.type === 'bun');
 const filling = ingredients.find((item) => item.type === 'main');
 const ingredient = ingredients[0];
@@ -29,7 +44,7 @@ describe('Интеграционные тесты конструктора бу�
       body: orderBurger
     }).as('createOrder');
 
-    cy.visit('http://localhost:4000/');
+    cy.visit(testUrl);
     cy.wait('@getIngredients');
     cy.wait('@getUserData');
   });
@@ -40,53 +55,45 @@ describe('Интеграционные тесты конструктора бу�
   });
 
   it('добавляет булку и начинку в конструктор по клику', () => {
-    cy.get(`[data-cy=cy-ingredient] a[href="/ingredients/${bun?._id}"]`)
+    cy.get(SELECTORS.ingredientLink(bun!._id)).parent().find('button').click();
+    cy.get(SELECTORS.constructorTop).should('contain', bun?.name);
+    cy.get(SELECTORS.constructorBottom).should('contain', bun?.name);
+    cy.get(SELECTORS.ingredientLink(filling!._id))
       .parent()
       .find('button')
       .click();
-    cy.get('[data-cy=constructor-top]').should('contain', bun?.name);
-    cy.get('[data-cy=constructor-bottom]').should('contain', bun?.name);
-    cy.get(`[data-cy=cy-ingredient] a[href="/ingredients/${filling?._id}"]`)
-      .parent()
-      .find('button')
-      .click();
-    cy.get('[data-cy=constructor-main]').should('contain', filling?.name);
+    cy.get(SELECTORS.constructorMain).should('contain', filling?.name);
   });
 
   it('открывает и закрывает модальное окно ингредиента', () => {
-    cy.get(
-      `[data-cy=cy-ingredient] a[href="/ingredients/${ingredient._id}"]`
-    ).click();
-    cy.get('[data-cy=cy-modal]')
-      .should('exist')
-      .and('contain', ingredient.name);
-    cy.get('[data-cy=modal-close]').click();
-    cy.get('[data-cy=cy-modal]').should('not.exist');
-    cy.get(
-      `[data-cy=cy-ingredient] a[href="/ingredients/${ingredient._id}"]`
-    ).click();
-    cy.get('[data-cy=modal-overlay]').click('topLeft', { force: true });
-    cy.get('[data-cy=cy-modal]').should('not.exist');
+    cy.get(SELECTORS.ingredientLink(ingredient._id)).click();
+    cy.get(SELECTORS.modal).should('exist').and('contain', ingredient.name);
+    cy.get(SELECTORS.modalClose).click();
+    cy.get(SELECTORS.modal).should('not.exist');
+    cy.get(SELECTORS.ingredientLink(ingredient._id)).click();
+    cy.get(SELECTORS.modalOverlay).click('topLeft', { force: true });
+    cy.get(SELECTORS.modal).should('not.exist');
   });
 
   it('создаёт и оформляет заказ', () => {
-    cy.get(`[data-cy=cy-ingredient] a[href="/ingredients/${bun?._id}"]`)
+    cy.get(SELECTORS.ingredientLink(bun!._id)).parent().find('button').click();
+    cy.get(SELECTORS.ingredientLink(filling!._id))
       .parent()
       .find('button')
       .click();
-    cy.get(`[data-cy=cy-ingredient] a[href="/ingredients/${filling?._id}"]`)
-      .parent()
-      .find('button')
-      .click();
-    cy.get(`[data-cy=cy-create-order]`).find('button').click();
+
+    cy.get(SELECTORS.createOrderButton).parent().find('button').click();
     cy.wait('@createOrder');
-    cy.get('[data-cy=cy-modal]').should('be.visible');
-    cy.get('[data-cy=cy-modal]').contains(orderBurger.order.number);
-    cy.get('[data-cy=constructor-top]').should('not.exist');
-    cy.get('[data-cy=no-ingredients]').should('exist');
-    cy.get('[data-cy=constructor-bottom]').should('not.exist');
-    cy.get('[data-cy=modal-close]').click();
-    cy.get('[data-cy=cy-modal]').should('not.exist');
-    cy.get('[data-cy=cy-moda]').should('not.exist');
+    cy.get(SELECTORS.modal)
+      .should('be.visible')
+      .contains(orderBurger.order.number);
+
+    cy.get(SELECTORS.constructorTop).should('not.exist');
+    cy.get(SELECTORS.noIngredients).should('exist');
+    cy.get(SELECTORS.constructorBottom).should('not.exist');
+
+    cy.get(SELECTORS.modalClose).click();
+    cy.get(SELECTORS.modal).should('not.exist');
+    cy.get(SELECTORS.modal).should('not.exist');
   });
 });
